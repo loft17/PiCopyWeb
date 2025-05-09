@@ -65,6 +65,7 @@ Para que los botones de reiniciar y apagar funcionen, el usuario que ejecuta el 
     En el directorio raíz del proyecto (donde está `package.json`):
     ```bash
     npm install
+    npm install express cors fs-extra child_process
     ```
     Esto instalará `express`, `cors`, `fs-extra`.
 
