@@ -1,0 +1,115 @@
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    margin: 0;
+    background-color: #f0f2f5;
+    color: #1c1e21;
+    line-height: 1.5;
+}
+.main-container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 15px;
+}
+header {
+    background-color: #007ACC; /* Azul principal */
+    color: white;
+    padding: 15px;
+    border-radius: 8px 8px 0 0;
+    text-align: center;
+}
+header h1 {
+    margin: 0 0 10px 0;
+    font-size: 1.8em;
+}
+nav button {
+    background-color: #005C99; /* Azul más oscuro */
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    margin: 0 5px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9em;
+}
+nav button:hover, nav button.active {
+    background-color: #004477; /* Aún más oscuro para hover/active */
+}
+main {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 0 0 8px 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+.view-section {
+    margin-bottom: 25px;
+}
+.view-section h2 {
+    color: #007ACC;
+    border-bottom: 2px solid #e0e0e0;
+    padding-bottom: 8px;
+    margin-top: 0;
+    font-size: 1.4em;
+}
+.form-group {
+    margin-bottom: 15px;
+}
+.form-group label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #333;
+}
+select, input[type="text"], input[type="date"] {
+    width: calc(100% - 22px); /* Ajuste para padding y borde */
+    padding: 10px;
+    border: 1px solid #ccd0d5;
+    border-radius: 5px;
+    font-size: 1em;
+    box-sizing: border-box; /* Importante */
+}
+input[readonly] {
+    background-color: #f0f0f0;
+    cursor: not-allowed;
+}
+.device-info {
+    font-style: italic;
+    color: #606770;
+    font-size: 0.85em;
+    margin-top: 3px;
+}
+.action-button, .system-button, .cancel-button {
+    display: block; /* Ocupar todo el ancho */
+    width: 100%;
+    background-color: #4CAF50; /* Verde para acciones principales */
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1.1em;
+    font-weight: bold;
+    text-align: center;
+    margin-top: 15px;
+}
+.action-button:hover { background-color: #388E3C; }
+
+.system-button { background-color: #ff9800; /* Naranja para sistema */}
+.system-button:hover { background-color: #e68a00; }
+.cancel-button { background-color: #D32F2F; /* Rojo para cancelar */ }
+.cancel-button:hover { background-color: #B71C1C; }
+
+.progress-section {
+    margin-top: 20px;
+    padding: 15px;
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+.progress-section h3 { margin-top: 0; color: #007ACC;}
+.progress-bar-container { width: 100%; background-color: #e0e0e0; border-radius: 4px; margin-bottom: 10px; height: 25px; overflow: hidden; }
+.progress-bar {
+    width: 0%; background-color: #4CAF50; color: white; text-align: center;
+    line-height: 25px; border-radius: 4px; height: 100%;
+    transition: width 0.3s ease-out; font-weight: bold;
+}
+#progressStatus, #currentFile, #eta { font-size: 0.9em; margin-bottom: 5px; }
