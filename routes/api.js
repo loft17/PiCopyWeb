@@ -266,7 +266,9 @@ router.post('/start-operation', async (req, res) => {
             if (!line) return;
             // console.log("RSYNC_LINE:", line); // Para depurar el output de rsync
 
-            const progressMatch = line.match(/^(\S+)\s+(\d+)%\s+([\d.]+[KMGT]?B?\/s)\s+(\d{1,2}:\d{2}:\d{2})\s+\(xfr#(\d+)/);
+            // Cambiar si no funciona la barra de progreso
+            // const progressMatch = line.match(/^(\S+)\s+(\d+)%\s+([\d.]+[KMGT]?B?\/s)\s+(\d{1,2}:\d{2}:\d{2})\s+\(xfr#(\d+)/);
+            const progressMatch = line.match(/^(\S+)\s+(\d+)%\s+([\d.,]+[KMGT]?B?\/s)\s+(\d{1,2}:\d{2}:\d{2})\s+\(xfr#(\d+)/);
 
             if (progressMatch) {
                 operationProgress.percentage = parseInt(progressMatch[2]);
