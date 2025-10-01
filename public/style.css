@@ -1,115 +1,359 @@
-body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+/* Base de fuentes de Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+/* Variables CSS para una gestión de colores más sencilla */
+:root {
+    --color-primary: #007AFF; /* Azul iOS */
+    --color-primary-dark: #0056B3;
+    --color-background: #F8F8F8;
+    --color-surface: #FFFFFF;
+    --color-text-dark: #333333;
+    --color-text-medium: #666666;
+    --color-text-light: #888888;
+    --color-border: #E0E0E0;
+    --color-success: #34C759;
+    --color-warning: #FF9500;
+    --color-danger: #FF3B30;
+    --color-secondary: #AAAAAA; /* Para cancelar u acciones secundarias */
+    --color-secondary-dark: #888888;
+
+    /* Nuevas variables para el control segmentado */
+    --segmented-bg: rgba(255, 255, 255, 0.2); /* Fondo de la barra de tabs */
+    --segmented-border: rgba(255, 255, 255, 0.3); /* Borde de la barra de tabs */
+    --segmented-active-bg: var(--color-surface); /* Fondo del tab activo */
+    --segmented-active-text: var(--color-primary); /* Texto del tab activo */
+    --segmented-inactive-text: var(--color-surface); /* Texto del tab inactivo */
+}
+
+/* Base global y reseteos para un enfoque mobile-first */
+*, *::before, *::after {
+    box-sizing: border-box;
     margin: 0;
-    background-color: #f0f2f5;
-    color: #1c1e21;
+    padding: 0;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
     line-height: 1.5;
+    background-color: var(--color-background);
+    color: var(--color-text-dark);
+    -webkit-font-smoothing: antialiased; /* Mejorar renderizado de fuente */
+    -moz-osx-font-smoothing: grayscale;
 }
+
 .main-container {
-    max-width: 600px;
-    margin: 0 auto;
+    max-width: 100%; /* Ocupa todo el ancho en móvil */
     padding: 15px;
 }
+
 header {
-    background-color: #007ACC; /* Azul principal */
-    color: white;
-    padding: 15px;
-    border-radius: 8px 8px 0 0;
+    background-color: var(--color-primary);
+    color: var(--color-surface);
+    padding: 20px 15px;
     text-align: center;
+    border-radius: 0 0 16px 16px; /* Bordes redondeados en la parte inferior del header */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
+
 header h1 {
-    margin: 0 0 10px 0;
+    margin: 0 0 15px 0;
     font-size: 1.8em;
+    font-weight: 700;
 }
-nav button {
-    background-color: #005C99; /* Azul más oscuro */
-    color: white;
-    border: none;
+
+/* ESTILO DEL CONTROL SEGMENTADO */
+.segmented-control {
+    display: flex;
+    justify-content: center;
+    width: fit-content; /* Se ajusta al contenido */
+    max-width: 100%;
+    margin: 15px auto 0 auto; /* Centrar y añadir margen superior */
+    background-color: var(--segmented-bg);
+    border: 1px solid var(--segmented-border);
+    border-radius: 10px; /* Bordes redondeados del contenedor */
+    overflow: hidden; /* Asegura que los botones internos no se salgan */
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px rgba(255, 255, 255, 0.1);
+}
+
+.segmented-control-button {
+    flex: 1; /* Distribuye el espacio equitativamente */
     padding: 10px 15px;
-    margin: 0 5px;
-    border-radius: 5px;
+    color: var(--segmented-inactive-text);
+    background-color: transparent;
+    border: none;
     cursor: pointer;
     font-size: 0.9em;
+    font-weight: 500;
+    transition: all 0.2s ease-in-out;
+    text-align: center;
+    min-width: 80px; /* Para asegurar que no se compriman demasiado */
 }
-nav button:hover, nav button.active {
-    background-color: #004477; /* Aún más oscuro para hover/active */
+
+.segmented-control-button:hover:not(.active) {
+    background-color: rgba(255, 255, 255, 0.1);
 }
+
+.segmented-control-button.active {
+    background-color: var(--segmented-active-bg);
+    color: var(--segmented-active-text);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15); /* Sombra para el segmento activo */
+    font-weight: 600;
+    position: relative;
+    z-index: 1; /* Asegura que la sombra se vea sobre los inactivos */
+}
+
+/* Para los bordes del botón activo, para que se vean parte del "segmento" */
+.segmented-control-button.active:first-child { border-radius: 9px 0 0 9px; }
+.segmented-control-button.active:last-child { border-radius: 0 9px 9px 0; }
+.segmented-control-button:first-child:not(.active) { border-right: 1px solid var(--segmented-border); }
+.segmented-control-button:not(:first-child):not(:last-child):not(.active) { border-left: 1px solid var(--segmented-border); border-right: 1px solid var(--segmented-border); }
+.segmented-control-button:last-child:not(.active) { border-left: 1px solid var(--segmented-border); }
+
+
 main {
-    background-color: #ffffff;
-    padding: 20px;
-    border-radius: 0 0 8px 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    background-color: var(--color-surface);
+    padding: 20px 15px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    margin-top: 20px; /* Separa el contenido principal del header */
 }
+
 .view-section {
-    margin-bottom: 25px;
+    margin-bottom: 30px;
 }
+
 .view-section h2 {
-    color: #007ACC;
-    border-bottom: 2px solid #e0e0e0;
-    padding-bottom: 8px;
-    margin-top: 0;
+    color: var(--color-primary);
     font-size: 1.4em;
+    font-weight: 600;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--color-border);
 }
+
 .form-group {
-    margin-bottom: 15px;
+    margin-bottom: 20px;
 }
+
 .form-group label {
     display: block;
-    font-weight: bold;
-    margin-bottom: 5px;
-    color: #333;
+    font-weight: 500;
+    margin-bottom: 8px;
+    color: var(--color-text-medium);
+    font-size: 0.95em;
 }
+
 select, input[type="text"], input[type="date"] {
-    width: calc(100% - 22px); /* Ajuste para padding y borde */
-    padding: 10px;
-    border: 1px solid #ccd0d5;
-    border-radius: 5px;
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
     font-size: 1em;
-    box-sizing: border-box; /* Importante */
+    color: var(--color-text-dark);
+    background-color: var(--color-surface);
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
 }
+
+select:focus, input[type="text"]:focus, input[type="date"]:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.2);
+    outline: none;
+}
+
+select {
+    background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23000000%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%00-13.2-5.4H18.6c-5%200-9.3%201.8-13.2%205.4A17.6%2017.6%200%200%000%2082.2c0%204.8%201.8%209.1%205.4%2013.2l128%20127.9c3.9%203.9%208.7%205.8%2013.2%205.8s9.3-1.8%2013.2-5.8L287%2095.4a17.6%2017.6%200%200%005.4-13.2c0-4.9-1.8-9.1-5.4-13.2z%22%2F%3E%3C%2Fsvg%3E');
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 12px;
+    padding-right: 30px;
+}
+
 input[readonly] {
-    background-color: #f0f0f0;
+    background-color: #F0F0F0;
     cursor: not-allowed;
 }
+
 .device-info {
     font-style: italic;
-    color: #606770;
-    font-size: 0.85em;
-    margin-top: 3px;
+    color: var(--color-text-light);
+    font-size: 0.8em;
+    margin-top: 5px;
 }
-.action-button, .system-button, .cancel-button {
-    display: block; /* Ocupar todo el ancho */
+
+.action-button {
+    display: block;
     width: 100%;
-    background-color: #4CAF50; /* Verde para acciones principales */
-    color: white;
-    padding: 12px 20px;
+    padding: 15px 20px;
     border: none;
-    border-radius: 5px;
+    border-radius: 10px;
     cursor: pointer;
     font-size: 1.1em;
-    font-weight: bold;
+    font-weight: 600;
     text-align: center;
-    margin-top: 15px;
+    margin-top: 25px;
+    transition: background-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
-.action-button:hover { background-color: #388E3C; }
 
-.system-button { background-color: #ff9800; /* Naranja para sistema */}
-.system-button:hover { background-color: #e68a00; }
-.cancel-button { background-color: #D32F2F; /* Rojo para cancelar */ }
-.cancel-button:hover { background-color: #B71C1C; }
+.action-button.primary {
+    background-color: var(--color-success);
+    color: white;
+}
+.action-button.primary:hover {
+    background-color: #28a745;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.action-button.warning {
+    background-color: var(--color-warning);
+    color: white;
+}
+.action-button.warning:hover {
+    background-color: #e68a00;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.action-button.danger {
+    background-color: var(--color-danger);
+    color: white;
+}
+.action-button.danger:hover {
+    background-color: #c82333;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.action-button.secondary {
+    background-color: var(--color-secondary);
+    color: white;
+}
+.action-button.secondary:hover {
+    background-color: var(--color-secondary-dark);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.action-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    box-shadow: none;
+}
 
 .progress-section {
-    margin-top: 20px;
-    padding: 15px;
-    border: 1px solid #e0e0e0;
-    border-radius: 5px;
-    background-color: #f9f9f9;
+    margin-top: 30px;
+    padding: 20px;
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    background-color: var(--color-surface);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
 }
-.progress-section h3 { margin-top: 0; color: #007ACC;}
-.progress-bar-container { width: 100%; background-color: #e0e0e0; border-radius: 4px; margin-bottom: 10px; height: 25px; overflow: hidden; }
+.progress-section h3 {
+    margin-top: 0;
+    color: var(--color-primary);
+    font-size: 1.2em;
+    font-weight: 600;
+    margin-bottom: 15px;
+}
+
+.progress-bar-container {
+    width: 100%;
+    background-color: #EFEFEF;
+    border-radius: 15px;
+    margin-bottom: 15px;
+    height: 28px;
+    overflow: hidden;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+}
+
 .progress-bar {
-    width: 0%; background-color: #4CAF50; color: white; text-align: center;
-    line-height: 25px; border-radius: 4px; height: 100%;
-    transition: width 0.3s ease-out; font-weight: bold;
+    width: 0%;
+    background-color: var(--color-primary);
+    color: white;
+    text-align: center;
+    line-height: 28px;
+    border-radius: 15px;
+    height: 100%;
+    transition: width 0.4s ease-out;
+    font-weight: 600;
+    font-size: 0.9em;
 }
-#progressStatus, #currentFile, #eta { font-size: 0.9em; margin-bottom: 5px; }
+
+.progress-details p {
+    font-size: 0.9em;
+    margin-bottom: 5px;
+    color: var(--color-text-medium);
+}
+.progress-details p:last-child {
+    margin-bottom: 0;
+}
+
+
+/* Media Queries para Tablets y Escritorio */
+@media (min-width: 768px) {
+    .main-container {
+        max-width: 700px;
+        padding: 25px;
+    }
+
+    header {
+        border-radius: 16px;
+    }
+
+    .segmented-control {
+        margin-top: 20px;
+    }
+
+    .segmented-control-button {
+        padding: 12px 20px;
+        font-size: 1em;
+    }
+
+    main {
+        padding: 30px;
+        margin-top: 30px;
+        border-radius: 16px;
+    }
+
+    .view-section h2 {
+        font-size: 1.6em;
+        margin-bottom: 25px;
+        padding-bottom: 15px;
+    }
+
+    .form-group {
+        margin-bottom: 25px;
+    }
+
+    .form-group label {
+        font-size: 1em;
+    }
+
+    .action-button {
+        padding: 16px 25px;
+        font-size: 1.15em;
+        margin-top: 30px;
+    }
+
+    .progress-section {
+        margin-top: 40px;
+        padding: 25px;
+    }
+    .progress-section h3 {
+        font-size: 1.3em;
+    }
+
+    .progress-bar-container {
+        height: 32px;
+        margin-bottom: 20px;
+    }
+    .progress-bar {
+        line-height: 32px;
+        font-size: 1em;
+    }
+    .progress-details p {
+        font-size: 1em;
+        margin-bottom: 8px;
+    }
+}

@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const progressSectionEl = document.querySelector('.progress-section');
     const progressBar = document.getElementById('progressBar');
     const progressStatus = document.getElementById('progressStatus');
-    const currentFileEl = document.getElementById('currentFile');
+    const gigasProgressEl = document.getElementById('gigasProgress');
     const etaEl = document.getElementById('eta');
     const cancelOperationButton = document.getElementById('cancelOperationButton');
 
@@ -25,8 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const sdSourceInfoEl = document.getElementById('sdSourceInfo');
     const sdDestinationInfoEl = document.getElementById('sdDestinationInfo');
     const sdCopyDateInput = document.getElementById('sdCopyDate');
-    const sdCameraMakeInput = document.getElementById('sdCameraMake'); // Solo este se usa para el nombre de carpeta
-    // sdCameraModelInput ya no existe en el HTML, así que no necesitamos un selector para él
+    const sdCameraMakeInput = document.getElementById('sdCameraMake');
     const startSdCopyButton = document.getElementById('startSdCopyButton');
 
     // --- Elementos Sección Sincronizar Backup ---
@@ -69,8 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function updateUIDateDefaults() {
         if (!sdCopyDateInput) return;
         const today = new Date();
-        // Ajustar a la zona horaria local para que la fecha por defecto sea correcta
-        const offset = today.getTimezoneOffset(); // offset en minutos
+        const offset = today.getTimezoneOffset();
         const todayLocal = new Date(today.getTime() - (offset * 60 * 1000));
         sdCopyDateInput.value = todayLocal.toISOString().split('T')[0];
     }
@@ -93,7 +91,6 @@ document.addEventListener('DOMContentLoaded', () => {
             populateDeviceSelect(syncSourceDeviceSelect, devicesCache);
             populateDeviceSelect(syncDestinationDeviceSelect, devicesCache);
 
-            // Actualizar la información mostrada para cada selector
             updateDeviceSelectionInfo(sdSourceDeviceSelect, sdSourceInfoEl);
             updateDeviceSelectionInfo(sdDestinationDeviceSelect, sdDestinationInfoEl);
             updateDeviceSelectionInfo(syncSourceDeviceSelect, syncSourceInfoEl);
@@ -107,14 +104,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function populateDeviceSelect(selectElement, devices) {
         if (!selectElement) {
-            // console.warn("populateDeviceSelect: selectElement es nulo.");
             return;
         }
-        const currentValue = selectElement.value; // Guardar valor actual si existe
+        const currentValue = selectElement.value;
         selectElement.innerHTML = '<option value="">-- Seleccionar Dispositivo --</option>';
         if (devices && Array.isArray(devices)) {
             devices.forEach(device => {
-                if (device && typeof device.path === 'string' && typeof device.label === 'string') { // Verificar que el dispositivo tiene las propiedades esperadas
+                if (device && typeof device.path === 'string' && typeof device.label === 'string') {
                     const option = document.createElement('option');
                     option.value = device.path;
                     const freeGB = device.free_space_gb !== undefined ? device.free_space_gb.toFixed(1) : 'N/A';
@@ -124,7 +120,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
         }
-        // Restaurar valor si aún es válido y existe en la nueva lista
         if (currentValue && devices && devices.some(d => d && d.path === currentValue)) {
             selectElement.value = currentValue;
         }
@@ -133,7 +128,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function updateDeviceSelectionInfo(selectElement, infoElement) {
         if (!selectElement || !infoElement) return;
         const selectedPath = selectElement.value;
-        infoElement.textContent = 'No seleccionado'; // Default
+        infoElement.textContent = 'No seleccionado';
         if (selectedPath && devicesCache.length > 0) {
             const selectedDevice = devicesCache.find(d => d.path === selectedPath);
             if (selectedDevice) {
@@ -144,7 +139,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Event listeners para actualizar info al cambiar selección
     if (sdSourceDeviceSelect) sdSourceDeviceSelect.addEventListener('change', () => updateDeviceSelectionInfo(sdSourceDeviceSelect, sdSourceInfoEl));
     if (sdDestinationDeviceSelect) sdDestinationDeviceSelect.addEventListener('change', () => updateDeviceSelectionInfo(sdDestinationDeviceSelect, sdDestinationInfoEl));
     if (syncSourceDeviceSelect) syncSourceDeviceSelect.addEventListener('change', () => updateDeviceSelectionInfo(syncSourceDeviceSelect, syncSourceInfoEl));
@@ -166,12 +160,12 @@ document.addEventListener('DOMContentLoaded', () => {
             sourcePath,
             destinationPath,
             operationMode: operationMode === 'sdCopy' ? 'copy' : 'sync',
-            ...copyDetails // Contendrá copyDate y cameraMake para sdCopy
+            ...copyDetails
         };
-        
+
         if (operationMode === 'sdCopy') {
             if (!payload.cameraMake || payload.cameraMake.trim() === "") {
-                 payload.cameraMake = "COPIA_SD"; // Valor por defecto si el usuario no ingresa nada
+                 payload.cameraMake = "COPIA_SD";
             }
              if (!payload.copyDate) {
                 alert("Por favor, selecciona una fecha para la copia SD.");
@@ -183,12 +177,12 @@ document.addEventListener('DOMContentLoaded', () => {
         if (startSyncButton) startSyncButton.disabled = true;
         if (cancelOperationButton) cancelOperationButton.style.display = 'block';
         if (progressSectionEl) progressSectionEl.style.display = 'block';
-        
+
         if (progressBar) {
             progressBar.style.width = '0%';
             progressBar.textContent = '0%';
         }
-        if (currentFileEl) currentFileEl.textContent = 'N/A';
+        if (gigasProgressEl) gigasProgressEl.textContent = 'Tamaño: Calculando...';
         if (etaEl) etaEl.textContent = '--:--:--';
         if (progressStatus) progressStatus.textContent = 'Iniciando operación...';
 
@@ -249,7 +243,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (progressInterval) clearInterval(progressInterval);
 
         progressInterval = setInterval(async () => {
-            if (!currentOperationId) { // Doble chequeo por si se limpió mientras tanto
+            if (!currentOperationId) {
                 stopPollingAndResetUI(false);
                 return;
             }
@@ -267,8 +261,14 @@ document.addEventListener('DOMContentLoaded', () => {
                     progressBar.textContent = `${data.percentage || 0}%`;
                 }
                 if (progressStatus) progressStatus.textContent = `Estado: ${data.message || data.status || 'Desconocido'}`;
-                if (currentFileEl) currentFileEl.textContent = `Elemento: ${data.currentFile || 'N/A'}`;
                 if (etaEl) etaEl.textContent = `ETA: ${data.eta || '--:--:--'}`;
+
+                if (gigasProgressEl) {
+                    const transferred = (data.transferredGB || 0).toFixed(2);
+                    const total = (data.totalSizeGB || 0).toFixed(2);
+                    gigasProgressEl.textContent = `Tamaño: ${transferred} / ${total} GB`;
+                }
+
 
                 if (data.status === 'completed' || data.status === 'error' || data.status === 'cancelled') {
                     stopPollingAndResetUI(data.status === 'completed');
@@ -279,7 +279,7 @@ document.addEventListener('DOMContentLoaded', () => {
             } catch (error) {
                 console.error('Error polling progress:', error);
                 if (progressStatus) progressStatus.textContent = 'Error al obtener progreso.';
-                stopPollingAndResetUI(false); // Detener si hay error de red en el polling
+                stopPollingAndResetUI(false);
             }
         }, 1500);
     }
@@ -289,21 +289,16 @@ document.addEventListener('DOMContentLoaded', () => {
             clearInterval(progressInterval);
             progressInterval = null;
         }
-        currentOperationId = null; // Importante resetear esto aquí
+        currentOperationId = null;
         resetOperationUI(success);
     }
-    
+
     function resetOperationUI(success){
         if (startSdCopyButton) startSdCopyButton.disabled = false;
         if (startSyncButton) startSyncButton.disabled = false;
         if (cancelOperationButton) cancelOperationButton.style.display = 'none';
-        
-        // No ocultar la sección de progreso inmediatamente si no fue exitoso,
-        // para que el usuario pueda ver el mensaje de estado final.
-        // if (success && progressSectionEl) {
-        // progressSectionEl.style.display = 'none';
-        // }
-        fetchDevicesAndPopulate(); // Refrescar dispositivos y su espacio
+
+        fetchDevicesAndPopulate();
     }
 
     if (cancelOperationButton) {
@@ -315,7 +310,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 const data = await response.json();
                 if (!response.ok) throw new Error(data.error || `Error HTTP: ${response.status}`);
                 if (progressStatus) progressStatus.textContent = data.message;
-                // El polling debería capturar el estado 'cancelled' y limpiar
             } catch (error) {
                 console.error('Error cancelling operation:', error);
                 alert(`Error al cancelar: ${error.message}`);
@@ -328,10 +322,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Lógica de Control del Sistema ---
     async function systemAction(action) {
         if (!confirm(`¿Estás seguro de que quieres ${action === 'reboot' ? 'REINICIAR' : 'APAGAR'} la Raspberry Pi?`)) return;
-        
+
         const btn = action === 'reboot' ? rebootButton : shutdownButton;
-        if (!btn) return; // Salir si el botón no existe
-        
+        if (!btn) return;
+
         const originalText = btn.textContent;
         btn.textContent = action === 'reboot' ? 'Reiniciando...' : 'Apagando...';
         btn.disabled = true;
@@ -341,11 +335,10 @@ document.addEventListener('DOMContentLoaded', () => {
             const data = await response.json();
             if (!response.ok) throw new Error(data.error || `Error HTTP: ${response.status}`);
             alert(data.message + (action === 'shutdown' ? " La conexión se perderá." : ""));
-            // Si es shutdown o reboot exitoso, la página puede dejar de responder
         } catch (error) {
             console.error(`Error en ${action}:`, error);
             alert(`Error al ${action}: ${error.message}`);
-            btn.textContent = originalText; // Restaurar texto y estado solo si falla
+            btn.textContent = originalText;
             btn.disabled = false;
         }
     }
@@ -356,9 +349,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Inicialización ---
     updateUIDateDefaults();
     fetchDevicesAndPopulate();
-    if (sdCopySection) { // Asegurarse que la sección existe antes de mostrarla
-        showSection(sdCopySection); // Mostrar la sección de Copia SD por defecto
+    if (sdCopySection) {
+        showSection(sdCopySection);
     } else if (allSections.length > 0 && allSections[0]) {
-        showSection(allSections[0]); // Mostrar la primera sección disponible
+        showSection(allSections[0]);
     }
 });

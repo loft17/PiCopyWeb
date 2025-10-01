@@ -5,35 +5,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RPi Web Copier</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="main-container">
         <header>
             <h1>RPi USB Copier</h1>
-            <nav class="segmented-control"> <!-- CLASE AÑADIDA AQUÍ -->
-                <button id="navSdCopy" class="segmented-control-button active">Copia SD</button>
-                <button id="navBackupSync" class="segmented-control-button">Sincronizar Backup</button>
-                <button id="navSystem" class="segmented-control-button">Sistema</nav>
+            <nav>
+                <button id="navSdCopy" class="active">Copia SD</button>
+                <button id="navBackupSync">Sincronizar Backup</button>
+                <button id="navSystem">Sistema</button>
             </nav>
         </header>
 
         <main>
-            <!-- SECCIONES DE CONTENIDO (COPIA SD, BACKUP SYNC, SISTEMA, PROGRESO) SE MANTIENEN IGUAL -->
-            <!-- ... (el resto del main es el mismo que en la versión anterior) ... -->
-
             <!-- Sección Copia SD -->
             <section id="sdCopySection" class="view-section">
                 <h2>Copia desde Tarjeta SD</h2>
                 <div class="form-group">
-                    <label for="sdSourceDevice">Origen (Tarjeta SD):</label>
+                    <label for="sdSourceDevice">ORIGEN (Tarjeta SD):</label>
                     <select id="sdSourceDevice"></select>
                     <p id="sdSourceInfo" class="device-info">No seleccionado</p>
                 </div>
                 <div class="form-group">
-                    <label for="sdDestinationDevice">Destino (Disco Duro):</label>
+                    <label for="sdDestinationDevice">DESTINO (Disco Duro):</label>
                     <select id="sdDestinationDevice"></select>
                     <p id="sdDestinationInfo" class="device-info">No seleccionado</p>
                 </div>
@@ -42,33 +36,33 @@
                     <input type="date" id="sdCopyDate">
                 </div>
                 <div class="form-group">
-                    <label for="sdCameraMake">Nombre para la Carpeta (Ej: GOPRO_VIAJE):</label>
+                    <label for="sdCameraMake">Nombre para la Carpeta (Ej: GOPRO_VIAJE, FOTOS_EVENTO):</label>
                     <input type="text" id="sdCameraMake" placeholder="Ej: FOTOS_BODA_ANA">
                 </div>
-                <button id="startSdCopyButton" class="action-button primary">INICIAR COPIA SD</button>
+                <button id="startSdCopyButton" class="action-button">INICIAR COPIA SD</button>
             </section>
 
             <!-- Sección Sincronizar Backup -->
             <section id="backupSyncSection" class="view-section" style="display:none;">
                 <h2>Sincronizar Disco de Backup Secundario</h2>
                 <div class="form-group">
-                    <label for="syncSourceDevice">Disco Origen (Backup Principal):</label>
+                    <label for="syncSourceDevice">DISCO ORIGEN (Backup Principal):</label>
                     <select id="syncSourceDevice"></select>
                     <p id="syncSourceInfo" class="device-info">No seleccionado</p>
                 </div>
                 <div class="form-group">
-                    <label for="syncDestinationDevice">Disco Destino (Backup Secundario):</label>
+                    <label for="syncDestinationDevice">DISCO DESTINO (Backup Secundario):</label>
                     <select id="syncDestinationDevice"></select>
                     <p id="syncDestinationInfo" class="device-info">No seleccionado</p>
                 </div>
-                <button id="startSyncButton" class="action-button primary">INICIAR SINCRONIZACIÓN</button>
+                <button id="startSyncButton" class="action-button">INICIAR SINCRONIZACIÓN</button>
             </section>
 
             <!-- Sección Sistema -->
             <section id="systemSection" class="view-section" style="display:none;">
                 <h2>Control del Sistema</h2>
-                <button id="rebootButton" class="action-button warning">Reiniciar Pi</button>
-                <button id="shutdownButton" class="action-button danger">Apagar Pi</button>
+                <button id="rebootButton" class="system-button">Reiniciar Pi</button>
+                <button id="shutdownButton" class="system-button">Apagar Pi</button>
             </section>
 
             <!-- Sección de Progreso (Común a Copia y Sincronización) -->
@@ -77,12 +71,12 @@
                 <div class="progress-bar-container">
                     <div id="progressBar" class="progress-bar">0%</div>
                 </div>
-                <div class="progress-details">
-                    <p id="progressStatus">Estado: Esperando...</p>
-                    <p id="gigasProgress">Tamaño: 0.00 / 0.00 GB</p>
-                    <p id="eta">ETA: --:--:--</p>
-                </div>
-                <button id="cancelOperationButton" class="action-button secondary">CANCELAR OPERACIÓN</button>
+                <p id="progressStatus">Estado: Esperando...</p>
+                <p id="currentFile">Elemento: N/A</p>
+                <p id="eta">ETA: --:--:--</p>
+                <p id="gigasCopied">Gigas copiados: 0.00 GB</p> <!-- NUEVO -->
+                <p id="totalGigas">Total a copiar: 0.00 GB</p> <!-- NUEVO -->
+                <button id="cancelOperationButton" style="display:none;" class="cancel-button">CANCELAR OPERACIÓN</button>
             </section>
         </main>
     </div>
